@@ -1,0 +1,332 @@
+import React, { useState } from 'react';
+import { 
+  User, 
+  Mail, 
+  Phone, 
+  CheckCircle2, 
+  Home, 
+  ClipboardList, 
+  ChevronLeft,
+  Settings
+} from 'lucide-react';
+
+export default function App() {
+  // App State
+  const [view, setView] = useState('form'); // 'form', 'success', 'admin'
+  const [guests, setGuests] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  
+  // ADD YOUR ZAPIER WEBHOOK URL HERE
+  const WEBHOOK_URL = 'https://hooks.zapier.com/hooks/catch/17232761/unrwc07/'; // e.g., 'https://hooks.zapier.com/hooks/catch/12345/abcdef/'
+
+  // Form State
+  const initialFormState = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    hasAgent: '',
+    preApproved: '',
+    comments: ''
+  };
+  const [formData, setFormData] = useState(initialFormState);
+
+  // Handle Input Changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  // Handle Form Submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitError('');
+    
+    // Add timestamp
+    const newGuest = { ...formData, timestamp: new Date().toLocaleString() };
+
+    try {
+      // Send data to Zapier if URL is configured
+      if (WEBHOOK_URL) {
+        await fetch(WEBHOOK_URL, {
+          method: 'POST',
+          body: JSON.stringify(newGuest),
+          mode: 'no-cors' // Prevents browser security errors when sending to Zapier
+        });
+      } else {
+         // Simulate network request if testing without URL
+         await new Promise(resolve => setTimeout(resolve, 600));
+      }
+
+      // Save locally to show in the Admin Dashboard for this session
+      setGuests(prev => [...prev, newGuest]);
+      
+      // Show success screen
+      setView('success');
+    } catch (error) {
+      console.error("Error submitting:", error);
+      setSubmitError('Sorry, there was an error submitting your sign-in. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Reset for next guest
+  const handleNextGuest = () => {
+    setFormData(initialFormState);
+    setView('form');
+  };
+
+  // --- Views ---
+
+  const renderForm = () => (
+    <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-100">
+      <div className="bg-slate-900 px-8 py-10 text-center text-white relative">
+        <button 
+          onClick={() => setView('admin')}
+          className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors p-2"
+          title="Agent Login"
+        >
+          <Settings size={20} />
+        </button>
+        <Home className="mx-auto h-12 w-12 mb-4 text-blue-400" />
+        <h1 className="text-3xl md:text-4xl font-light mb-2">Welcome to our Open House</h1>
+        <p className="text-slate-400 mt-4 text-sm">Please sign in below so we can thank you for coming!</p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="p-8 md:p-10 space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* First Name */}
+          <div className="space-y-2">
+            <label className="text-sm font-semibold text-slate-700 block">First Name *</label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <User className="h-5 w-5 text-slate-400" />
+              </div>
+              <input
+                type="text"
+                name="firstName"
+                required
+                value={formData.firstName}
+                onChange={handleInputChange}
+                className="block w-full pl-10 pr-3 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow bg-slate-50"
+                placeholder="Jane"
+              />
+            </div>
+          </div>
+
+          {/* Last Name */}
+          <div className="space-y-2">
+            <label className="text-sm font-semibold text-slate-700 block">Last Name *</label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <User className="h-5 w-5 text-slate-400" />
+              </div>
+              <input
+                type="text"
+                name="lastName"
+                required
+                value={formData.lastName}
+                onChange={handleInputChange}
+                className="block w-full pl-10 pr-3 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow bg-slate-50"
+                placeholder="Doe"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Email */}
+        <div className="space-y-2">
+          <label className="text-sm font-semibold text-slate-700 block">Email Address *</label>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Mail className="h-5 w-5 text-slate-400" />
+            </div>
+            <input
+              type="email"
+              name="email"
+              required
+              value={formData.email}
+              onChange={handleInputChange}
+              className="block w-full pl-10 pr-3 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow bg-slate-50"
+              placeholder="jane.doe@example.com"
+            />
+          </div>
+        </div>
+
+        {/* Phone */}
+        <div className="space-y-2">
+          <label className="text-sm font-semibold text-slate-700 block">Phone Number</label>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Phone className="h-5 w-5 text-slate-400" />
+            </div>
+            <input
+              type="tel"
+              name="phone"
+              value={formData.phone}
+              onChange={handleInputChange}
+              className="block w-full pl-10 pr-3 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow bg-slate-50"
+              placeholder="(555) 123-4567"
+            />
+          </div>
+        </div>
+
+        {/* Question: Working with Agent? */}
+        <div className="space-y-3 pt-2">
+          <label className="text-sm font-semibold text-slate-700 block">Are you currently working with a Real Estate Agent?</label>
+          <div className="flex gap-4">
+            <label className="flex items-center gap-2 cursor-pointer bg-slate-50 px-4 py-3 rounded-xl border border-slate-200 flex-1 hover:bg-slate-100 transition-colors">
+              <input 
+                type="radio" 
+                name="hasAgent" 
+                value="Yes" 
+                onChange={handleInputChange}
+                checked={formData.hasAgent === 'Yes'}
+                className="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500" 
+              />
+              <span className="text-slate-700">Yes</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer bg-slate-50 px-4 py-3 rounded-xl border border-slate-200 flex-1 hover:bg-slate-100 transition-colors">
+              <input 
+                type="radio" 
+                name="hasAgent" 
+                value="No" 
+                onChange={handleInputChange}
+                checked={formData.hasAgent === 'No'}
+                className="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500" 
+              />
+              <span className="text-slate-700">No</span>
+            </label>
+          </div>
+        </div>
+
+        {/* Feedback / Comments */}
+        <div className="space-y-2 pt-2">
+          <label className="text-sm font-semibold text-slate-700 block">Any feedback on the property? (Optional)</label>
+          <textarea
+            name="comments"
+            rows="3"
+            value={formData.comments}
+            onChange={handleInputChange}
+            className="block w-full p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow bg-slate-50 resize-none"
+            placeholder="What did you like about the home?"
+          ></textarea>
+        </div>
+
+        {/* Error Message */}
+        {submitError && (
+          <div className="text-red-600 bg-red-50 p-3 rounded-xl border border-red-100 text-sm">
+            {submitError}
+          </div>
+        )}
+
+        {/* Submit Button */}
+        <div className="pt-4">
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className={`w-full text-white font-medium py-4 px-6 rounded-xl shadow-lg transition-all duration-200 text-lg flex justify-center items-center gap-2 ${
+              isSubmitting ? 'bg-slate-400 cursor-not-allowed' : 'bg-slate-900 hover:bg-slate-800 hover:shadow-xl'
+            }`}
+          >
+            {isSubmitting ? 'Signing In...' : 'Sign In'} <CheckCircle2 className="w-5 h-5" />
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+
+  const renderSuccess = () => (
+    <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden p-12 text-center border border-slate-100">
+      <div className="flex justify-center mb-6">
+        <div className="bg-green-100 p-4 rounded-full">
+          <CheckCircle2 className="h-16 w-16 text-green-600" />
+        </div>
+      </div>
+      <h2 className="text-3xl font-bold text-slate-800 mb-4">You're all set!</h2>
+      <p className="text-lg text-slate-600 mb-8">
+        Thank you for visiting today. Feel free to look around and let us know if you have any questions.
+      </p>
+      <button
+        onClick={handleNextGuest}
+        className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-8 rounded-xl shadow-md transition-all duration-200 text-lg"
+      >
+        Ready for Next Guest
+      </button>
+    </div>
+  );
+
+  const renderAdmin = () => (
+    <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-100">
+      <div className="bg-slate-900 px-6 py-5 flex items-center justify-between text-white">
+        <div className="flex items-center gap-3">
+          <ClipboardList className="h-6 w-6 text-blue-400" />
+          <h2 className="text-xl font-semibold">Agent Dashboard - Guest List</h2>
+        </div>
+        <button 
+          onClick={() => setView('form')}
+          className="flex items-center gap-2 text-sm text-slate-300 hover:text-white transition-colors bg-slate-800 px-4 py-2 rounded-lg"
+        >
+          <ChevronLeft className="w-4 h-4" /> Back to Sign-in
+        </button>
+      </div>
+      
+      <div className="p-6 overflow-x-auto">
+        {guests.length === 0 ? (
+          <div className="text-center py-12 text-slate-500">
+            <ClipboardList className="mx-auto h-12 w-12 text-slate-300 mb-3" />
+            <p className="text-lg">No guests have signed in yet.</p>
+          </div>
+        ) : (
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="border-b-2 border-slate-100">
+                <th className="py-3 px-4 font-semibold text-slate-700">Time</th>
+                <th className="py-3 px-4 font-semibold text-slate-700">Name</th>
+                <th className="py-3 px-4 font-semibold text-slate-700">Contact</th>
+                <th className="py-3 px-4 font-semibold text-slate-700">Has Agent?</th>
+                <th className="py-3 px-4 font-semibold text-slate-700">Comments</th>
+              </tr>
+            </thead>
+            <tbody>
+              {guests.map((guest, index) => (
+                <tr key={index} className="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                  <td className="py-4 px-4 text-sm text-slate-500 whitespace-nowrap">{guest.timestamp.split(', ')[1]}</td>
+                  <td className="py-4 px-4 font-medium text-slate-800">{guest.firstName} {guest.lastName}</td>
+                  <td className="py-4 px-4">
+                    <div className="text-sm text-slate-800">{guest.email}</div>
+                    <div className="text-sm text-slate-500">{guest.phone}</div>
+                  </td>
+                  <td className="py-4 px-4">
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                      guest.hasAgent === 'Yes' ? 'bg-amber-100 text-amber-800' : 
+                      guest.hasAgent === 'No' ? 'bg-green-100 text-green-800' : 'bg-slate-100 text-slate-800'
+                    }`}>
+                      {guest.hasAgent || 'N/A'}
+                    </span>
+                  </td>
+                  <td className="py-4 px-4 text-sm text-slate-600 max-w-xs truncate" title={guest.comments}>
+                    {guest.comments || '-'}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans flex items-center justify-center">
+      <div className="w-full">
+        {view === 'form' && renderForm()}
+        {view === 'success' && renderSuccess()}
+        {view === 'admin' && renderAdmin()}
+      </div>
+    </div>
+  );
+}
