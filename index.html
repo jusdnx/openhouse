@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open House Sign-In</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Hide scrollbar for cleaner look on iPad */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-slate-50 p-4 md:p-8 font-sans flex items-center justify-center text-slate-800">
+
+    <div class="w-full">
+        
+        <!-- ========================================== -->
+        <!-- FORM VIEW -->
+        <!-- ========================================== -->
+        <div id="form-view" class="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-100">
+            <div class="bg-slate-900 px-8 py-10 text-center text-white relative">
+                <button 
+                    onclick="showView('admin')"
+                    class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors p-2"
+                    title="Agent Login"
+                >
+                    <i data-lucide="settings" class="w-5 h-5"></i>
+                </button>
+                <i data-lucide="home" class="mx-auto h-12 w-12 mb-4 text-blue-400"></i>
+                <h1 class="text-3xl md:text-4xl font-light mb-2">Welcome to our Open House</h1>
+                <p class="text-slate-400 mt-4 text-sm">Please sign in below so we can thank you for coming!</p>
+            </div>
+
+            <form id="sign-in-form" class="p-8 md:p-10 space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- First Name -->
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-slate-700 block">First Name *</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i data-lucide="user" class="h-5 w-5 text-slate-400"></i>
+                            </div>
+                            <input
+                                type="text"
+                                name="firstName"
+                                required
+                                class="block w-full pl-10 pr-3 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow bg-slate-50 outline-none"
+                                placeholder="Jane"
+                            />
+                        </div>
+                    </div>
+
+                    <!-- Last Name -->
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-slate-700 block">Last Name *</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i data-lucide="user" class="h-5 w-5 text-slate-400"></i>
+                            </div>
+                            <input
+                                type="text"
+                                name="lastName"
+                                required
+                                class="block w-full pl-10 pr-3 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow bg-slate-50 outline-none"
+                                placeholder="Doe"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700 block">Email Address *</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i data-lucide="mail" class="h-5 w-5 text-slate-400"></i>
+                        </div>
+                        <input
+                            type="email"
+                            name="email"
+                            required
+                            class="block w-full pl-10 pr-3 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow bg-slate-50 outline-none"
+                            placeholder="jane.doe@example.com"
+                        />
+                    </div>
+                </div>
+
+                <!-- Phone -->
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700 block">Phone Number</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i data-lucide="phone" class="h-5 w-5 text-slate-400"></i>
+                        </div>
+                        <input
+                            type="tel"
+                            name="phone"
+                            class="block w-full pl-10 pr-3 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow bg-slate-50 outline-none"
+                            placeholder="(555) 123-4567"
+                        />
+                    </div>
+                </div>
+
+                <!-- Question: Working with Agent? -->
+                <div class="space-y-3 pt-2">
+                    <label class="text-sm font-semibold text-slate-700 block">Are you currently working with a Real Estate Agent?</label>
+                    <div class="flex gap-4">
+                        <label class="flex items-center gap-2 cursor-pointer bg-slate-50 px-4 py-3 rounded-xl border border-slate-200 flex-1 hover:bg-slate-100 transition-colors">
+                            <input 
+                                type="radio" 
+                                name="hasAgent" 
+                                value="Yes" 
+                                class="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500" 
+                            />
+                            <span class="text-slate-700">Yes</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer bg-slate-50 px-4 py-3 rounded-xl border border-slate-200 flex-1 hover:bg-slate-100 transition-colors">
+                            <input 
+                                type="radio" 
+                                name="hasAgent" 
+                                value="No" 
+                                class="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500" 
+                            />
+                            <span class="text-slate-700">No</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Feedback / Comments -->
+                <div class="space-y-2 pt-2">
+                    <label class="text-sm font-semibold text-slate-700 block">Any feedback on the property? (Optional)</label>
+                    <textarea
+                        name="comments"
+                        rows="3"
+                        class="block w-full p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow bg-slate-50 resize-none outline-none"
+                        placeholder="What did you like about the home?"
+                    ></textarea>
+                </div>
+
+                <!-- Error Message -->
+                <div id="submit-error" class="hidden text-red-600 bg-red-50 p-3 rounded-xl border border-red-100 text-sm">
+                    Sorry, there was an error submitting your sign-in. Please try again.
+                </div>
+
+                <!-- Submit Button -->
+                <div class="pt-4">
+                    <button
+                        id="submit-btn"
+                        type="submit"
+                        class="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-4 px-6 rounded-xl shadow-lg transition-all duration-200 text-lg flex justify-center items-center gap-2"
+                    >
+                        <span id="btn-text">Sign In</span>
+                        <i id="btn-icon" data-lucide="check-circle-2" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- SUCCESS VIEW -->
+        <!-- ========================================== -->
+        <div id="success-view" class="max-w-xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden p-12 text-center border border-slate-100 hidden">
+            <div class="flex justify-center mb-6">
+                <div class="bg-green-100 p-4 rounded-full text-green-600">
+                    <i data-lucide="check-circle-2" class="h-16 w-16"></i>
+                </div>
+            </div>
+            <h2 class="text-3xl font-bold text-slate-800 mb-4">You're all set!</h2>
+            <p class="text-lg text-slate-600 mb-8">
+                Thank you for visiting today. Feel free to look around and let us know if you have any questions.
+            </p>
+            <button
+                onclick="nextGuest()"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-8 rounded-xl shadow-md transition-all duration-200 text-lg"
+            >
+                Ready for Next Guest
+            </button>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- ADMIN VIEW -->
+        <!-- ========================================== -->
+        <div id="admin-view" class="max-w-5xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-100 hidden">
+            <div class="bg-slate-900 px-6 py-5 flex items-center justify-between text-white">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="clipboard-list" class="h-6 w-6 text-blue-400"></i>
+                    <h2 class="text-xl font-semibold">Agent Dashboard - Guest List</h2>
+                </div>
+                <button 
+                    onclick="showView('form')"
+                    class="flex items-center gap-2 text-sm text-slate-300 hover:text-white transition-colors bg-slate-800 px-4 py-2 rounded-lg"
+                >
+                    <i data-lucide="chevron-left" class="w-4 h-4"></i> Back to Sign-in
+                </button>
+            </div>
+            
+            <div class="p-6 overflow-x-auto min-h-[300px]">
+                <!-- Empty State -->
+                <div id="admin-empty" class="text-center py-12 text-slate-500">
+                    <i data-lucide="clipboard-list" class="mx-auto h-12 w-12 text-slate-300 mb-3"></i>
+                    <p class="text-lg">No guests have signed in yet.</p>
+                </div>
+
+                <!-- Table -->
+                <table id="admin-table" class="w-full text-left border-collapse hidden">
+                    <thead>
+                        <tr class="border-b-2 border-slate-100">
+                            <th class="py-3 px-4 font-semibold text-slate-700">Time</th>
+                            <th class="py-3 px-4 font-semibold text-slate-700">Name</th>
+                            <th class="py-3 px-4 font-semibold text-slate-700">Contact</th>
+                            <th class="py-3 px-4 font-semibold text-slate-700">Has Agent?</th>
+                            <th class="py-3 px-4 font-semibold text-slate-700">Comments</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-tbody">
+                        <!-- Rows dynamically populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Application Logic -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // App State
+        let guests = [];
+        const WEBHOOK_URL = 'https://hooks.zapier.com/hooks/catch/17232761/unrwc07/';
+
+        // View Navigation
+        function showView(viewName) {
+            document.getElementById('form-view').classList.add('hidden');
+            document.getElementById('success-view').classList.add('hidden');
+            document.getElementById('admin-view').classList.add('hidden');
+            
+            document.getElementById(viewName + '-view').classList.remove('hidden');
+
+            if (viewName === 'admin') {
+                renderAdminTable();
+            }
+        }
+
+        // Reset Form for Next Guest
+        function nextGuest() {
+            document.getElementById('sign-in-form').reset();
+            document.getElementById('submit-error').classList.add('hidden');
+            showView('form');
+        }
+
+        // Render Admin Dashboard Table
+        function renderAdminTable() {
+            const emptyState = document.getElementById('admin-empty');
+            const table = document.getElementById('admin-table');
+            const tbody = document.getElementById('admin-tbody');
+
+            if (guests.length === 0) {
+                emptyState.classList.remove('hidden');
+                table.classList.add('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                table.classList.remove('hidden');
+                
+                tbody.innerHTML = ''; // Clear existing rows
+                
+                guests.forEach(guest => {
+                    const timeOnly = guest.timestamp.split(', ')[1] || guest.timestamp;
+                    
+                    let agentBadgeClass = 'bg-slate-100 text-slate-800';
+                    if (guest.hasAgent === 'Yes') agentBadgeClass = 'bg-amber-100 text-amber-800';
+                    if (guest.hasAgent === 'No') agentBadgeClass = 'bg-green-100 text-green-800';
+
+                    const row = `
+                        <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                            <td class="py-4 px-4 text-sm text-slate-500 whitespace-nowrap">${timeOnly}</td>
+                            <td class="py-4 px-4 font-medium text-slate-800">${guest.firstName} ${guest.lastName}</td>
+                            <td class="py-4 px-4">
+                                <div class="text-sm text-slate-800">${guest.email}</div>
+                                <div class="text-sm text-slate-500">${guest.phone || ''}</div>
+                            </td>
+                            <td class="py-4 px-4">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${agentBadgeClass}">
+                                    ${guest.hasAgent || 'N/A'}
+                                </span>
+                            </td>
+                            <td class="py-4 px-4 text-sm text-slate-600 max-w-xs truncate" title="${guest.comments || ''}">
+                                ${guest.comments || '-'}
+                            </td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+            }
+        }
+
+        // Handle Form Submission
+        document.getElementById('sign-in-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submit-btn');
+            const btnText = document.getElementById('btn-text');
+            const btnIcon = document.getElementById('btn-icon');
+            const errorMsg = document.getElementById('submit-error');
+
+            // Set Loading State
+            submitBtn.disabled = true;
+            submitBtn.classList.add('bg-slate-400', 'cursor-not-allowed');
+            submitBtn.classList.remove('bg-slate-900', 'hover:bg-slate-800');
+            btnText.innerText = 'Signing In...';
+            btnIcon.classList.add('hidden');
+            errorMsg.classList.add('hidden');
+
+            // Gather Data
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            data.timestamp = new Date().toLocaleString();
+            
+            // Fix radio button logic if unselected (FormData omits unselected radios)
+            if (!data.hasAgent) data.hasAgent = '';
+
+            try {
+                // Send to Zapier
+                if (WEBHOOK_URL) {
+                    await fetch(WEBHOOK_URL, {
+                        method: 'POST',
+                        body: JSON.stringify(data),
+                        mode: 'no-cors' // Prevents browser security errors when sending to Zapier
+                    });
+                } else {
+                    // Simulate network delay if no URL provided
+                    await new Promise(resolve => setTimeout(resolve, 600));
+                }
+
+                // Save locally for the admin dashboard session
+                guests.push(data);
+                
+                // Show Success Screen
+                showView('success');
+
+            } catch (error) {
+                console.error("Error submitting:", error);
+                errorMsg.classList.remove('hidden');
+            } finally {
+                // Restore Button State
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('bg-slate-400', 'cursor-not-allowed');
+                submitBtn.classList.add('bg-slate-900', 'hover:bg-slate-800');
+                btnText.innerText = 'Sign In';
+                btnIcon.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
